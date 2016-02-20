@@ -15,7 +15,7 @@ import org.springframework.cloud.stream.messaging.Source;
 @SpringBootApplication
 public class ZuulProxyClientApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ZuulProxyClientApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ZuulProxyClientApplication.class, args);
+    }
 }

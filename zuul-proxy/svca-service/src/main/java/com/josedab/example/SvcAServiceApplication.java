@@ -6,9 +6,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-public class SocialProfileServiceApplication {
+public class SvcAServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SocialProfileServiceApplication.class, args);
+        SpringApplication.run(SvcAServiceApplication.class, args);
     }
 }
