@@ -70,10 +70,4 @@ public class SocialProfileApiGatewayController {
         return getProfileNamesFallback();
     }
     
-    @RequestMapping(method=RequestMethod.POST)
-    public void writeProfile(@RequestBody SocialProfile socialProfile) {
-        Message<String> message = MessageBuilder.withPayload(socialProfile.getName()).build();
-        source.output().send(message);
-    }
-    
 }
