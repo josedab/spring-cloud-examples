@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpMethod;
@@ -31,9 +30,6 @@ public class SocialProfileApiGatewayController {
 
     @Autowired
     private RestTemplate restTemplate;
-    
-    @Autowired
-    private Source source;
     
     @HystrixCommand(fallbackMethod = "getProfileNamesFallback")
     @RequestMapping(method=RequestMethod.GET, value="/names/{service}")
@@ -68,12 +64,6 @@ public class SocialProfileApiGatewayController {
     
     private Collection<String> getProfileNamesFallback(String service) {
         return getProfileNamesFallback();
-    }
-    
-    @RequestMapping(method=RequestMethod.POST)
-    public void writeProfile(@RequestBody SocialProfile socialProfile) {
-        Message<String> message = MessageBuilder.withPayload(socialProfile.getName()).build();
-        source.output().send(message);
     }
     
 }
