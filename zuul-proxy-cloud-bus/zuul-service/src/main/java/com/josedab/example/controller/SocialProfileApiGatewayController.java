@@ -5,12 +5,15 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +36,8 @@ public class SocialProfileApiGatewayController {
     private RestTemplate restTemplate;
     
     @Autowired
-    private Source source;
+    @Output(Source.OUTPUT)
+    private MessageChannel messageChannel;
     
     @HystrixCommand(fallbackMethod = "getProfileNamesFallback")
     @RequestMapping(method=RequestMethod.GET, value="/names/{service}")
@@ -73,7 +77,7 @@ public class SocialProfileApiGatewayController {
     @RequestMapping(method=RequestMethod.POST)
     public void writeProfile(@RequestBody SocialProfile socialProfile) {
         Message<String> message = MessageBuilder.withPayload(socialProfile.getName()).build();
-        source.output().send(message);
+        messageChannel.send(message);
     }
     
 }
