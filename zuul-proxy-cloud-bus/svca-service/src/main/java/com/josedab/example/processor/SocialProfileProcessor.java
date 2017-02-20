@@ -16,6 +16,7 @@ public class SocialProfileProcessor {
 
     @ServiceActivator(inputChannel = Sink.INPUT)
     public void acceptNewProfiles(String profileName) {
+        System.out.println("Got new profile " + profileName);
         socialProfileRepository.save(new SocialProfile(profileName));
     }
 

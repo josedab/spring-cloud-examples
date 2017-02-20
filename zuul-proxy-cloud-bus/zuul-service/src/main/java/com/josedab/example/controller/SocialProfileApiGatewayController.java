@@ -36,24 +36,29 @@ public class SocialProfileApiGatewayController {
     private RestTemplate restTemplate;
     
     @Autowired
-    @Output(Source.OUTPUT)
-    private MessageChannel messageChannel;
+    private Source source;
     
     @HystrixCommand(fallbackMethod = "getProfileNamesFallback")
     @RequestMapping(method=RequestMethod.GET, value="/names/{service}")
     public Collection<String> getProfileNamesForService(@PathVariable("service") String service) {
-        ParameterizedTypeReference<Resources<SocialProfile>> typeReference = new ParameterizedTypeReference<Resources<SocialProfile>>() {};
-        ResponseEntity<Resources<SocialProfile>> profiles = 
-                restTemplate.exchange(
-                        "http://" + service + "/socialProfiles", 
-                        HttpMethod.GET, 
-                        null, 
-                        typeReference);
-        
-        return profiles.getBody().getContent()
-                                 .stream()
-                                 .map(SocialProfile::getName)
-                                 .collect(Collectors.toList());
+        try {
+            ParameterizedTypeReference<Resources<SocialProfile>> typeReference = new ParameterizedTypeReference<Resources<SocialProfile>>() {
+            };
+            ResponseEntity<Resources<SocialProfile>> profiles =
+                    restTemplate.exchange(
+                            "http://" + service + "/socialProfiles",
+                            HttpMethod.GET,
+                            null,
+                            typeReference);
+            return profiles.getBody().getContent()
+                    .stream()
+                    .map(SocialProfile::getName)
+                    .collect(Collectors.toList());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+return null;
+
         
     }
     
@@ -77,7 +82,7 @@ public class SocialProfileApiGatewayController {
     @RequestMapping(method=RequestMethod.POST)
     public void writeProfile(@RequestBody SocialProfile socialProfile) {
         Message<String> message = MessageBuilder.withPayload(socialProfile.getName()).build();
-        messageChannel.send(message);
+        source.output().send(message);
     }
     
 }
