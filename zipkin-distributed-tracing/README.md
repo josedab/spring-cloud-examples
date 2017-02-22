@@ -15,7 +15,11 @@ inside each of the suprojects.
 
 The recommended way to deploy is:
 
-- Deploy Redis. We use it for the cloud streaming messages propagated to the zipkin stream server.
+- Deploy Kafka on the default ports. We use it for the cloud streaming messages propagated to the zipkin stream server.
+```
+~/kafka_2.11-0.10.1.0$ bin/zookeeper-server-start.sh configookeeper.properties
+~/kafka_2.11-0.10.1.0$ bin/kafka-server-start.sh config/server.properties
+```
 - Deploy config-service
 - Deploy service a
 - Deploy service b
